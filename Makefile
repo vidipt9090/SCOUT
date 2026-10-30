@@ -83,4 +83,3 @@ pilot:
 
 report:
 	$(PY_PLATFORM) eval/report.py
-	@echo "$@ is not built yet; see SCOUT_IMPLEMENTATION_PLAN.md" && exit 1

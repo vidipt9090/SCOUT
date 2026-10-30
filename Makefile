@@ -78,5 +78,9 @@ view:
 poison:
 	$(PY_SENSING) eval/poison_test.py
 
-pilot report:
+pilot:
+	$(PY_SENSING) eval/pilot.py $(if $(LIMIT),--limit $(LIMIT))
+
+report:
+	$(PY_PLATFORM) eval/report.py
 	@echo "$@ is not built yet; see SCOUT_IMPLEMENTATION_PLAN.md" && exit 1

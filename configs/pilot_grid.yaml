@@ -1,11 +1,39 @@
-# Defaults from plan 5.1; disruption types and severities await team confirmation.
-factors:
-  disruption_type: [port_delay, strike]
-  severity: [low, high]
-  persona: [plant, retail_dc]
-  architecture: [sequential, hierarchical]
-  planner_strategy: [react, cot]
-replicates: 1
-comm_mode_runs: 8  # only if B4.9 is built
-manipulation_check: {severity: medium}
-logged_only: {temperature: null, complexity_level: null}
+# Pilot design. Disruption types and severities are the plan's defaults, awaiting team confirmation.
+seed: 3101
+blocks:
+  # Persona divergence check, run first so it survives a quota stop.
+  manipulation:
+    disruption_type: [port_delay, strike]
+    severity: [medium]
+    persona: [plant, retail_dc]
+    architecture: [sequential]
+    planner_strategy: [react]
+    comm_mode: [blackboard]
+    scout_prompt: [scout_cot_v1]
+  core:
+    disruption_type: [port_delay, strike]
+    severity: [low, high]
+    persona: [plant, retail_dc]
+    architecture: [sequential, hierarchical]
+    planner_strategy: [react, cot]
+    comm_mode: [blackboard]
+    scout_prompt: [scout_cot_v1]
+  # Each direct run pairs with the matching sequential ReAct run in core.
+  messaging:
+    disruption_type: [port_delay, strike]
+    severity: [low, high]
+    persona: [plant, retail_dc]
+    architecture: [sequential]
+    planner_strategy: [react]
+    comm_mode: [direct]
+    scout_prompt: [scout_cot_v1]
+  # Each few-shot run pairs with the matching run in core.
+  prompt_variance:
+    disruption_type: [port_delay, strike]
+    severity: [low, high]
+    persona: [plant]
+    architecture: [sequential]
+    planner_strategy: [react]
+    comm_mode: [blackboard]
+    scout_prompt: [scout_few_shot_v1]
+logged_only: {temperature: 0, complexity_level: null}

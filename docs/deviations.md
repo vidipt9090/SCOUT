@@ -6,7 +6,7 @@ Python 3.12.6 in all three environments, installed from `<service>/requirements.
 
 | Package | sensing | decision | scout_platform |
 |---|---|---|---|
-| crewai | 1.15.33 (`a2a` extra) | | |
+| crewai | 1.15.33 (`a2a`, `google-genai` extras) | | |
 | google-adk | | 2.13.0 (`a2a`, `mcp` extras) | |
 | mcp | 1.30.0 | 1.30.0 | 1.30.0 |
 | a2a-sdk | 0.3.26 | 0.3.26 | |
@@ -29,6 +29,11 @@ Requirement 7: no LangChain, LangGraph, LangSmith, AutoGen, LlamaIndex, Semantic
 6. Branches are `a/dev`, `b/dev`, `c/dev`. Git cannot name a branch `a/` alone.
 7. Requirement files are per service, inside the service directory.
 8. The repo sits in `scout/` inside the course folder, with a copy of the plan at `docs/SCOUT_IMPLEMENTATION_PLAN.md`.
+
+9. Solo build. One person builds the whole project (decided 2026-10-30), so the member split in plan section 4, the `a/`, `b/`, `c/` branches, PR review and the own-it checkpoints between members do not apply. `main` protection is not set. `a/dev`, `b/dev` and `c/dev` were deleted. Work goes on feature branches.
+10. The blackboard runs in the `scout_platform` environment, because FastAPI is pinned there. Its code stays in `sensing/blackboard_service/`.
+11. `spikes/` holds throwaway spike code and was not in the plan's layout.
+12. CrewAI has the `google-genai` extra, which it needs to reach Gemini. It pins `google-genai~=1.65.0`, while ADK has its own newer version. The separate environments keep these apart.
 
 ## Open gaps
 

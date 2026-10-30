@@ -1,4 +1,4 @@
-crewai[a2a]
+crewai[a2a,google-genai]
 pydantic
 pyyaml
 httpx

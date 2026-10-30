@@ -1,0 +1,47 @@
+# EVALUATION ONLY. Never load this file into a prompt, tool result, RAG document or agent config.
+# Committed before any contract or SOP text, so the git log shows labels were not written after the fact.
+severity_levels: {low: 2, medium: 3, high: 4}
+
+cells:
+  port_delay:
+    low:
+      plant: {action: reorder, reason: Any delay threatens a 2-day floor; the primary route still works.}
+      retail_dc: {action: monitor, reason: 3 to 4 weeks of cover absorbs a single-route delay.}
+    medium:
+      plant: {action: reorder, reason: Expedited reorder from the primary; lead times extend but the route is open.}
+      retail_dc: {action: stock_transfer, reason: Peer DCs have slack and transfer costs less than a new vendor.}
+    high:
+      plant: {action: switch_supplier, reason: Primary corridor closed; only a Tier 1 or 2 alternate protects the line.}
+      retail_dc: {action: switch_supplier, reason: A closed corridor outlasts cover; transfer only delays the gap.}
+  strike:
+    low:
+      plant: {action: reorder, reason: A limited strike leaves the primary able to ship; order before it spreads.}
+      retail_dc: {action: monitor, reason: Cover absorbs a limited strike.}
+    medium:
+      plant: {action: switch_supplier, reason: Unlike a port delay, a wider strike stops the primary, so expediting cannot help.}
+      retail_dc: {action: stock_transfer, reason: Peer DCs bridge the strike at lower cost than a new vendor.}
+    high:
+      plant: {action: switch_supplier, reason: Primary stopped; only an alternate protects the line.}
+      retail_dc: {action: switch_supplier, reason: A long strike outlasts cover.}
+  weather:
+    low:
+      plant: {action: reorder, reason: Same logic as a low port delay.}
+      retail_dc: {action: monitor, reason: Same logic as a low port delay.}
+    medium:
+      plant: {action: reorder, reason: Same logic as a medium port delay.}
+      retail_dc: {action: stock_transfer, reason: Same logic as a medium port delay.}
+    high:
+      plant: {action: switch_supplier, reason: Same logic as a high port delay.}
+      retail_dc: {action: switch_supplier, reason: Same logic as a high port delay.}
+
+# Cases where the expected result is a Guardrail decision, whatever the Planner proposed.
+guardrail_cases:
+  single_domain_high:
+    expected_decision: counter
+    expected_action: monitor
+    violated_rule: POL-07
+    reason: Severity 4 from one source domain cannot justify action until corroborated.
+  severity_5:
+    expected_decision: escalate
+    violated_rule: POL-09
+    reason: Severity 5 always goes to a human.

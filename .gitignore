@@ -1,0 +1,19 @@
+# secrets
+.env
+*.key
+
+# environments and caches
+.venvs/
+.venvs_*.log
+__pycache__/
+.pytest_cache/
+*.pyc
+
+# raw data and run output
+data/m5/raw/
+*.sales_train*.csv
+sales_train_*.csv
+calendar.csv
+sell_prices.csv
+runs/
+data/rag/chroma/

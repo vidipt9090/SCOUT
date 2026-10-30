@@ -1,0 +1,164 @@
+{
+  "$defs": {
+    "MitigationPlan": {
+      "additionalProperties": false,
+      "properties": {
+        "plan_id": {
+          "title": "Plan Id",
+          "type": "string"
+        },
+        "assessment_id": {
+          "title": "Assessment Id",
+          "type": "string"
+        },
+        "persona": {
+          "enum": [
+            "plant",
+            "retail_dc"
+          ],
+          "title": "Persona",
+          "type": "string"
+        },
+        "action": {
+          "enum": [
+            "reorder",
+            "switch_supplier",
+            "stock_transfer",
+            "monitor"
+          ],
+          "title": "Action",
+          "type": "string"
+        },
+        "sku": {
+          "title": "Sku",
+          "type": "string"
+        },
+        "vendor_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Vendor Id"
+        },
+        "quantity": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Quantity"
+        },
+        "rationale": {
+          "title": "Rationale",
+          "type": "string"
+        },
+        "cited_doc_ids": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Cited Doc Ids",
+          "type": "array"
+        },
+        "estimated_cost": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Estimated Cost"
+        },
+        "strategy": {
+          "enum": [
+            "react",
+            "cot"
+          ],
+          "title": "Strategy",
+          "type": "string"
+        }
+      },
+      "required": [
+        "plan_id",
+        "assessment_id",
+        "persona",
+        "action",
+        "sku",
+        "vendor_id",
+        "quantity",
+        "rationale",
+        "cited_doc_ids",
+        "estimated_cost",
+        "strategy"
+      ],
+      "title": "MitigationPlan",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "plan_id": {
+      "title": "Plan Id",
+      "type": "string"
+    },
+    "decision": {
+      "enum": [
+        "approve",
+        "counter",
+        "escalate"
+      ],
+      "title": "Decision",
+      "type": "string"
+    },
+    "violated_rules": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Violated Rules",
+      "type": "array"
+    },
+    "checker": {
+      "enum": [
+        "rules",
+        "llm",
+        "both",
+        "none"
+      ],
+      "title": "Checker",
+      "type": "string"
+    },
+    "counter_plan": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/MitigationPlan"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "reasons": {
+      "title": "Reasons",
+      "type": "string"
+    }
+  },
+  "required": [
+    "plan_id",
+    "decision",
+    "violated_rules",
+    "checker",
+    "counter_plan",
+    "reasons"
+  ],
+  "title": "GuardrailVerdict",
+  "type": "object"
+}

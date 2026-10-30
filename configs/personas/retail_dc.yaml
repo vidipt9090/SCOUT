@@ -1,0 +1,7 @@
+persona: retail_dc
+profile: FMCG retailer with 3 to 4 weeks of inventory
+risk_tolerance: moderate
+stockout_cost: medium
+hard_constraint: {max_emergency_over_baseline_pct: 15}
+soft_constraint: Prefers cost over speed
+days_of_cover_start: [21, 28]

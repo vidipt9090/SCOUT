@@ -1,0 +1,1 @@
+{"plan_id":"plan-001","assessment_id":"asm-001","persona":"plant","action":"reorder","sku":"FOODS_3_090","vendor_id":"V1","quantity":500.0,"rationale":"Cover falls near the 2-day floor; the primary vendor can deliver.","cited_doc_ids":["SOP-REORDER-01"],"estimated_cost":1250.0,"strategy":"react"}

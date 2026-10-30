@@ -1,0 +1,1 @@
+{"assessment_id":"asm-001","sku":"FOODS_3_090","baseline_daily_demand":40.0,"revised_daily_demand":46.0,"delta_pct":15.0,"model_used":"seasonal_naive","horizon_days":14,"interpretation":"Revised demand reduces cover towards the Plant 2-day safety floor."}

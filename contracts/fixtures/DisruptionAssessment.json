@@ -1,0 +1,1 @@
+{"assessment_id":"asm-001","disruption_type":"port_delay","severity":3,"severity_votes":[3,3,4],"vote_agreement":0.67,"supporting_signal_ids":["sig-001"],"corroborating_domains":["example-news.com"],"affected_skus":["FOODS_3_090"],"summary":"Regional port congestion extends lead times."}

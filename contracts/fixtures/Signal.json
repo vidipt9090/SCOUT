@@ -1,0 +1,1 @@
+{"signal_id":"sig-001","source_domain":"example-news.com","headline":"Port congestion delays container traffic","snippet":"Vessels are waiting several days to berth.","published_at":"2026-10-29T08:00:00Z","is_relevant":true,"disruption_type":"port_delay","confidence":0.8,"reasoning":"Describes a physical delay in a goods flow through a port.","scout_id":"A"}

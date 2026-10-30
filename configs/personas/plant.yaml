@@ -1,0 +1,7 @@
+persona: plant
+profile: Just-in-time production, minimal buffer
+risk_tolerance: very_low
+stockout_cost: high
+hard_constraint: {safety_floor_days: 2}
+soft_constraint: Prefers established suppliers
+days_of_cover_start: 2.5  # just above the floor; assumption, tune in B2.2

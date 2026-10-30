@@ -1,0 +1,72 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "signal_id": {
+      "title": "Signal Id",
+      "type": "string"
+    },
+    "source_domain": {
+      "title": "Source Domain",
+      "type": "string"
+    },
+    "headline": {
+      "title": "Headline",
+      "type": "string"
+    },
+    "snippet": {
+      "title": "Snippet",
+      "type": "string"
+    },
+    "published_at": {
+      "format": "date-time",
+      "title": "Published At",
+      "type": "string"
+    },
+    "is_relevant": {
+      "title": "Is Relevant",
+      "type": "boolean"
+    },
+    "disruption_type": {
+      "enum": [
+        "port_delay",
+        "strike",
+        "weather",
+        "none"
+      ],
+      "title": "Disruption Type",
+      "type": "string"
+    },
+    "confidence": {
+      "maximum": 1,
+      "minimum": 0,
+      "title": "Confidence",
+      "type": "number"
+    },
+    "reasoning": {
+      "title": "Reasoning",
+      "type": "string"
+    },
+    "scout_id": {
+      "enum": [
+        "A",
+        "B"
+      ],
+      "title": "Scout Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "signal_id",
+    "source_domain",
+    "headline",
+    "snippet",
+    "published_at",
+    "is_relevant",
+    "disruption_type",
+    "confidence",
+    "reasoning",
+    "scout_id"
+  ],
+  "title": "Signal",
+  "type": "object"
+}

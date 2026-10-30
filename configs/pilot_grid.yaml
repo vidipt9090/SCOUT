@@ -1,0 +1,11 @@
+# Defaults from plan 5.1; disruption types and severities await team confirmation.
+factors:
+  disruption_type: [port_delay, strike]
+  severity: [low, high]
+  persona: [plant, retail_dc]
+  architecture: [sequential, hierarchical]
+  planner_strategy: [react, cot]
+replicates: 1
+comm_mode_runs: 8  # only if B4.9 is built
+manipulation_check: {severity: medium}
+logged_only: {temperature: null, complexity_level: null}

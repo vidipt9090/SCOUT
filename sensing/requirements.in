@@ -1,0 +1,7 @@
+crewai[a2a]
+pydantic
+pyyaml
+httpx
+python-dotenv
+pytest
+pipdeptree

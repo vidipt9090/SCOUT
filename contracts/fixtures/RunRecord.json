@@ -1,0 +1,1 @@
+{"run_id":"run-001","condition":{"persona":"plant","architecture":"sequential","strategy":"react"},"started_at":"2026-10-30T10:00:00Z","ended_at":"2026-10-30T10:00:20Z","total_latency_s":20.0,"per_agent_latency_s":{"planner":6.5},"tokens_in":1000,"tokens_out":200,"estimated_cost":0.0,"outcome":"approve","degraded":false,"trace_path":"runs/run-001.jsonl"}

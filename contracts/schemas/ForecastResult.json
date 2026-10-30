@@ -1,0 +1,52 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "assessment_id": {
+      "title": "Assessment Id",
+      "type": "string"
+    },
+    "sku": {
+      "title": "Sku",
+      "type": "string"
+    },
+    "baseline_daily_demand": {
+      "minimum": 0,
+      "title": "Baseline Daily Demand",
+      "type": "number"
+    },
+    "revised_daily_demand": {
+      "minimum": 0,
+      "title": "Revised Daily Demand",
+      "type": "number"
+    },
+    "delta_pct": {
+      "title": "Delta Pct",
+      "type": "number"
+    },
+    "model_used": {
+      "title": "Model Used",
+      "type": "string"
+    },
+    "horizon_days": {
+      "exclusiveMinimum": 0,
+      "title": "Horizon Days",
+      "type": "integer"
+    },
+    "interpretation": {
+      "title": "Interpretation",
+      "type": "string"
+    }
+  },
+  "required": [
+    "assessment_id",
+    "sku",
+    "baseline_daily_demand",
+    "revised_daily_demand",
+    "delta_pct",
+    "model_used",
+    "horizon_days",
+    "interpretation"
+  ],
+  "title": "ForecastResult",
+  "type": "object"
+}

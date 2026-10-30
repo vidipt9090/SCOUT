@@ -1,0 +1,76 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "assessment_id": {
+      "title": "Assessment Id",
+      "type": "string"
+    },
+    "disruption_type": {
+      "enum": [
+        "port_delay",
+        "strike",
+        "weather"
+      ],
+      "title": "Disruption Type",
+      "type": "string"
+    },
+    "severity": {
+      "maximum": 5,
+      "minimum": 1,
+      "title": "Severity",
+      "type": "integer"
+    },
+    "severity_votes": {
+      "items": {
+        "type": "integer"
+      },
+      "minItems": 1,
+      "title": "Severity Votes",
+      "type": "array"
+    },
+    "vote_agreement": {
+      "maximum": 1,
+      "minimum": 0,
+      "title": "Vote Agreement",
+      "type": "number"
+    },
+    "supporting_signal_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Supporting Signal Ids",
+      "type": "array"
+    },
+    "corroborating_domains": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Corroborating Domains",
+      "type": "array"
+    },
+    "affected_skus": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Affected Skus",
+      "type": "array"
+    },
+    "summary": {
+      "title": "Summary",
+      "type": "string"
+    }
+  },
+  "required": [
+    "assessment_id",
+    "disruption_type",
+    "severity",
+    "severity_votes",
+    "vote_agreement",
+    "supporting_signal_ids",
+    "corroborating_domains",
+    "affected_skus",
+    "summary"
+  ],
+  "title": "DisruptionAssessment",
+  "type": "object"
+}

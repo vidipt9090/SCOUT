@@ -1,0 +1,13 @@
+mcp<2
+chromadb
+pydantic
+pyyaml
+httpx
+python-dotenv
+fastapi
+uvicorn
+pandas
+statsmodels
+scipy
+pytest
+pipdeptree

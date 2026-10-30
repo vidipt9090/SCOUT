@@ -1,0 +1,97 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "run_id": {
+      "title": "Run Id",
+      "type": "string"
+    },
+    "condition": {
+      "additionalProperties": true,
+      "title": "Condition",
+      "type": "object"
+    },
+    "started_at": {
+      "format": "date-time",
+      "title": "Started At",
+      "type": "string"
+    },
+    "ended_at": {
+      "format": "date-time",
+      "title": "Ended At",
+      "type": "string"
+    },
+    "total_latency_s": {
+      "minimum": 0,
+      "title": "Total Latency S",
+      "type": "number"
+    },
+    "per_agent_latency_s": {
+      "additionalProperties": {
+        "type": "number"
+      },
+      "title": "Per Agent Latency S",
+      "type": "object"
+    },
+    "tokens_in": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Tokens In"
+    },
+    "tokens_out": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Tokens Out"
+    },
+    "estimated_cost": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Estimated Cost"
+    },
+    "outcome": {
+      "title": "Outcome",
+      "type": "string"
+    },
+    "degraded": {
+      "title": "Degraded",
+      "type": "boolean"
+    },
+    "trace_path": {
+      "title": "Trace Path",
+      "type": "string"
+    }
+  },
+  "required": [
+    "run_id",
+    "condition",
+    "started_at",
+    "ended_at",
+    "total_latency_s",
+    "per_agent_latency_s",
+    "tokens_in",
+    "tokens_out",
+    "estimated_cost",
+    "outcome",
+    "degraded",
+    "trace_path"
+  ],
+  "title": "RunRecord",
+  "type": "object"
+}

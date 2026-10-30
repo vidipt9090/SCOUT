@@ -40,6 +40,8 @@ installer==1.1.0
 interface_meta==2.0.1
 jsonschema==4.26.0
 jsonschema-specifications==2025.9.1
+kagglehub==1.0.3
+kagglesdk==0.1.38
 kubernetes==37.0.1
 markdown-it-py==4.2.0
 mcp==1.30.0

@@ -35,8 +35,10 @@ Requirement 7: no LangChain, LangGraph, LangSmith, AutoGen, LlamaIndex, Semantic
 11. `spikes/` holds throwaway spike code and was not in the plan's layout.
 12. CrewAI has the `google-genai` extra, which it needs to reach Gemini. It pins `google-genai~=1.65.0`, while ADK has its own newer version. The separate environments keep these apart.
 
+13. The brief says different messaging architectures "need to be tried and compared", so B4.9 is treated as required and removed from the cut order in plan section 9.
+14. The Signal `snippet` uses newsdata.io `description`, because `content` is paid only.
+
 ## Open gaps
 
-- `docs/PROJECT_BRIEF.md` is not written: the brief was not available in the workspace.
-- `make` and Docker are not installed on this machine. `make test` was run as its underlying command. K1 needs Docker.
+- Docker is not installed on this machine. K1 needs it.
 - Environments were tested from the pinned files on this machine only, with a pip dry-run in fresh environments. The second-machine check in G0 is still to do.

@@ -17,3 +17,4 @@ calendar.csv
 sell_prices.csv
 runs/
 data/rag/chroma/
+data/snapshots/*.json

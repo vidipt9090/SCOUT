@@ -5,6 +5,17 @@ min_moq: 10
 unit_cost_share_of_price: 0.6
 plant_critical_categories: [FOODS]
 
+# Eight vendors shared across the SKUs. Tier and penalty are properties of the vendor.
+vendors:
+  V01: {tier: 1, penalty_pct: 2}
+  V02: {tier: 1, penalty_pct: 2}
+  V03: {tier: 1, penalty_pct: 3}
+  V04: {tier: 1, penalty_pct: 2}
+  V05: {tier: 2, penalty_pct: 3}
+  V06: {tier: 2, penalty_pct: 4}
+  V07: {tier: 2, penalty_pct: 3}
+  V08: {tier: 3, penalty_pct: 0}
+
 # Each of these SKUs also has a compliant alternate, so one correct action still exists.
 tier3_trap_sku: FOODS_3_076     # tempting Tier 3 alternate, exercises POL-03
 lead_time_trap_sku: HOUSEHOLD_1_453  # alternate slower than the 21-day high-severity horizon, exercises POL-05

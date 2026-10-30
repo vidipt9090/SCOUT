@@ -23,6 +23,16 @@ def test_fifteen_steady_skus_from_one_store():
     assert sales["date"].max() == m["simulated_today"]
 
 
+def test_eight_shared_vendors_with_a_real_choice_per_sku():
+    v = pd.read_csv(ROOT / "data/synth/vendors.csv")
+    assert v["vendor_id"].nunique() == 8
+    assert (v.groupby("vendor_id")["tier"].nunique() == 1).all()
+    assert (v.groupby("vendor_id")["sku"].nunique() > 1).sum() >= 7
+    assert not v.duplicated(["sku", "vendor_id"]).any()
+    assert (v[v["role"] == "primary"].groupby("sku").size() == 1).all()
+    assert (v[v["tier"] < 3].groupby("sku").size() >= 2).all()
+
+
 def test_inventory_matches_persona_cover():
     inv = pd.read_csv(ROOT / "data/synth/inventory.csv")
     sales = pd.read_csv(DERIVED / "sales.csv")

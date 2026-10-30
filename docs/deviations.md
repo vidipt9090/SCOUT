@@ -47,12 +47,14 @@ Requirement 7: no LangChain, LangGraph, LangSmith, AutoGen, LlamaIndex, Semantic
 
 21. RAG precision at 5 is 0.64 against the plan's default target of 0.8. The target cannot be met on this probe: many queries have one relevant chunk, so the ceiling is 0.68. Hit rate is 1.00, and the exact procedure clause is in the top 5 for 18 of 18 cells, which is the measure the Planner depends on.
 22. `vendors.csv` adds `approved_contract`, `unit_cost_usd` and `plant_critical`, which POL-03, POL-04 and POL-05 need. Plant critical means FOODS. Unit cost is 60% of the shelf price, an assumption.
-23. Two SKUs have a third vendor, so a trap alternate (Tier 3, or 25-day lead time) exists beside a compliant one, and one correct action remains.
+23. Two SKUs have a third agreement, so a trap alternate (Tier 3, or 25-day lead time) exists beside a compliant one, and one correct action remains.
 24. `strike` at medium for Plant is `switch_supplier`, not `reorder`, because a wider strike stops the primary. This differs from the port-delay row by design.
 25. Forecast baseline per SKU is the better of seasonal naive and a fixed SARIMA(1,0,1)(0,1,1,7) on a 28-day holdout: 12 SARIMA, 3 seasonal naive.
 26. Disruption horizons and demand multipliers in `configs/disruption_effects.yaml` are assumptions.
 27. `data/forecasting/` and `data/rag/probe.py`, `retrieve.py` were added to the layout. Scenario definitions are in `data/scenarios/scenarios.yaml`, and poison labels in `eval/poison_labels.yaml`.
 28. Real news in the snapshot is thin for weather: `typhoon port` returned no articles inside the 30-day window. Scenarios use planted text, so this affects only realism.
+
+29. Vendors are 8 shared suppliers (V01 to V08), with one supply agreement per vendor and SKU: 32 agreements. Tier and penalty belong to the vendor; lead time, MOQ and unit cost belong to the agreement. This replaces one invented vendor per agreement, which was unrealistic.
 
 ## Open gaps
 

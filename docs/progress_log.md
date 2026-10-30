@@ -29,3 +29,4 @@ Format: date | task | command | pass or fail | one line of output.
 2026-10-30 | B2.10-11 | make up, make check | pass | 8 tools, blackboard through MCP, entries 1
 2026-10-30 | B2.12 | make test | pass | 37 passed
 2026-10-30 | G2 | wipe generated files, make data, make test | pass | rebuilt from scratch, 37 passed
+2026-10-30 | B2.3 rework | make vendors docs rag-index rag-probe, make test | pass | 8 vendors, 32 agreements

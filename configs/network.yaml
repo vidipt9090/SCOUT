@@ -1,0 +1,6 @@
+# Modelled supply network. M5 gives real store sales; how stores are supplied is our assumption.
+locations:
+  plant: [CA_1, CA_2, CA_3, CA_4, TX_1, TX_2, TX_3, WI_1, WI_2, WI_3]  # supplies the whole chain
+  retail_dc: [CA_1, CA_2, CA_3, CA_4]
+  peer_dc_1: [TX_1, TX_2, TX_3]
+  peer_dc_2: [WI_1, WI_2, WI_3]

@@ -1,5 +1,6 @@
 persona: retail_dc
-profile: FMCG retailer with 3 to 4 weeks of inventory
+location: retail_dc
+profile: Distribution centre serving the 4 California stores, holding 3 to 4 weeks of inventory.
 risk_tolerance: moderate
 stockout_cost: medium
 hard_constraint: {max_emergency_over_baseline_pct: 15}

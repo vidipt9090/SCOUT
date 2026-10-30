@@ -2,10 +2,10 @@
 # the Theme Analyst must infer it from the text. The harness looks the expected result up in ground_truth.yaml.
 scenarios:
   port_delay_low: {disruption_type: port_delay, level: low, affected_sku: FOODS_3_363}
-  port_delay_medium: {disruption_type: port_delay, level: medium, affected_sku: HOBBIES_1_048}
-  port_delay_high: {disruption_type: port_delay, level: high, affected_sku: FOODS_3_076}
-  strike_low: {disruption_type: strike, level: low, affected_sku: FOODS_3_412}
-  strike_medium: {disruption_type: strike, level: medium, affected_sku: HOBBIES_1_254}
-  strike_high: {disruption_type: strike, level: high, affected_sku: HOUSEHOLD_1_453}
-  single_domain_high: {disruption_type: port_delay, level: guardrail, affected_sku: FOODS_3_752}
-  severity_5: {disruption_type: port_delay, level: guardrail, affected_sku: FOODS_3_498}
+  port_delay_medium: {disruption_type: port_delay, level: medium, affected_sku: HOBBIES_1_103}
+  port_delay_high: {disruption_type: port_delay, level: high, affected_sku: FOODS_3_230}
+  strike_low: {disruption_type: strike, level: low, affected_sku: FOODS_3_333}
+  strike_medium: {disruption_type: strike, level: medium, affected_sku: HOBBIES_1_178}
+  strike_high: {disruption_type: strike, level: high, affected_sku: HOUSEHOLD_1_306}
+  single_domain_high: {disruption_type: port_delay, level: guardrail, affected_sku: FOODS_3_681}
+  severity_5: {disruption_type: port_delay, level: guardrail, affected_sku: FOODS_2_059}

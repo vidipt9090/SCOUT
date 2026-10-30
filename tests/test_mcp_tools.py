@@ -29,7 +29,7 @@ def call(tool, args, model):
 
 
 def test_get_sales_history():
-    out = call("get_sales_history", {"sku": SKU, "days": 7}, models.SalesHistory)
+    out = call("get_sales_history", {"sku": SKU, "location": "retail_dc", "days": 7}, models.SalesHistory)
     assert len(out.days) == 7 and out.days[-1].date == "2016-05-22"
 
 
@@ -37,10 +37,11 @@ def test_get_inventory_differs_by_persona():
     plant = call("get_inventory", {"sku": SKU, "location": "plant"}, models.Inventory)
     retail = call("get_inventory", {"sku": SKU, "location": "retail_dc"}, models.Inventory)
     assert plant.days_of_cover < 3.5 < 20 < retail.days_of_cover
+    assert plant.avg_daily_demand_90d > retail.avg_daily_demand_90d
 
 
 def test_lookup_vendor_has_primary_and_alternate():
-    out = call("lookup_vendor", {"sku": "FOODS_3_076"}, models.VendorList)
+    out = call("lookup_vendor", {"sku": "FOODS_3_230"}, models.VendorList)
     assert {v.role for v in out.vendors} == {"primary", "alternate"}
     assert any(v.tier == 3 for v in out.vendors)
 
@@ -54,7 +55,7 @@ def test_get_policy_limits_is_persona_specific():
 def test_forecast_uses_configured_multiplier():
     out = call(
         "forecast",
-        {"sku": SKU, "horizon_days": 14, "disruption_type": "port_delay", "severity": 3},
+        {"sku": SKU, "location": "retail_dc", "horizon_days": 14, "disruption_type": "port_delay", "severity": 3},
         models.Forecast,
     )
     assert out.multiplier == 1.10 and out.delta_pct == pytest.approx(10.0)
@@ -70,8 +71,8 @@ def test_rag_search_filters_to_sku_and_persona():
 @pytest.mark.parametrize(
     "tool,args",
     [
-        ("forecast", {"sku": SKU, "horizon_days": 14, "disruption_type": "port_delay", "severity": 9}),
-        ("get_sales_history", {"sku": "'; DROP TABLE vendors; --", "days": 7}),
+        ("forecast", {"sku": SKU, "location": "plant", "horizon_days": 14, "disruption_type": "port_delay", "severity": 9}),
+        ("get_sales_history", {"sku": "'; DROP TABLE vendors; --", "location": "plant", "days": 7}),
         ("get_inventory", {"sku": SKU, "location": "../../.env"}),
         ("rag_search", {"query": "x", "persona": "admin", "sku": SKU}),
     ],

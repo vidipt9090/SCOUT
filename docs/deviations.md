@@ -40,7 +40,7 @@ Requirement 7: no LangChain, LangGraph, LangSmith, AutoGen, LlamaIndex, Semantic
 
 15. News source is GNews, not newsdata.io (project owner's decision, 2026-10-30). GNews cannot reach M5 dates; see `docs/spikes/news.md`. Plan references to newsdata.io and `NEWSDATA_API_KEY` now mean GNews and `GNEWS_API_KEY`.
 16. M5 sales end on 2016-05-22 (d_1941). The calendar runs to 2016-06-19, but those days have no sales. 2016-05-22 is simulated today.
-17. Store is CA_3, which had the most steady SKUs (254). The 15 SKUs are 7 FOODS, 5 HOBBIES and 3 HOUSEHOLD, capped at 7 per category. The extract keeps the last 1095 days.
+17. D8 (one store) is replaced: all 10 stores roll up to four locations (`configs/network.yaml`), decided 2026-10-30 so that Plant and the peer DCs have real demand. 268 SKUs qualify; the 15 are 7 FOODS, 5 HOBBIES and 3 HOUSEHOLD, capped at 7 per category. The extract keeps the last 1095 days. `get_sales_history` and `forecast` gain a `location` argument, and MOQs scale to Retail DC demand.
 18. Retail DC and peer DC safety floors (7 and 10 days) and peer cover (35 to 45 days) are assumptions, not plan values.
 19. Vendor MOQs in plan 6.4 (200 to 1000 units) are too large for these SKUs, which sell about 4 to 17 units a day. B2.3 must scale MOQs to demand, or every order breaches POL-01 and Plant over-orders by months.
 20. The M5 extract and inventory are git-ignored until M5 terms are checked. `make m5-extract` and `make inventory` rebuild them from the raw files.
@@ -49,7 +49,7 @@ Requirement 7: no LangChain, LangGraph, LangSmith, AutoGen, LlamaIndex, Semantic
 22. `vendors.csv` adds `approved_contract`, `unit_cost_usd` and `plant_critical`, which POL-03, POL-04 and POL-05 need. Plant critical means FOODS. Unit cost is 60% of the shelf price, an assumption.
 23. Two SKUs have a third agreement, so a trap alternate (Tier 3, or 25-day lead time) exists beside a compliant one, and one correct action remains.
 24. `strike` at medium for Plant is `switch_supplier`, not `reorder`, because a wider strike stops the primary. This differs from the port-delay row by design.
-25. Forecast baseline per SKU is the better of seasonal naive and a fixed SARIMA(1,0,1)(0,1,1,7) on a 28-day holdout: 12 SARIMA, 3 seasonal naive.
+25. Forecast baseline per SKU and location is the better of seasonal naive and a fixed SARIMA(1,0,1)(0,1,1,7) on a 28-day holdout.
 26. Disruption horizons and demand multipliers in `configs/disruption_effects.yaml` are assumptions.
 27. `data/forecasting/` and `data/rag/probe.py`, `retrieve.py` were added to the layout. Scenario definitions are in `data/scenarios/scenarios.yaml`, and poison labels in `eval/poison_labels.yaml`.
 28. Real news in the snapshot is thin for weather: `typhoon port` returned no articles inside the 30-day window. Scenarios use planted text, so this affects only realism.

@@ -17,8 +17,8 @@ vendors:
   V08: {tier: 3, penalty_pct: 0}
 
 # Each of these SKUs also has a compliant alternate, so one correct action still exists.
-tier3_trap_sku: FOODS_3_076     # tempting Tier 3 alternate, exercises POL-03
-lead_time_trap_sku: HOUSEHOLD_1_453  # alternate slower than the 21-day high-severity horizon, exercises POL-05
+tier3_trap_sku: FOODS_3_230     # tempting Tier 3 alternate, exercises POL-03
+lead_time_trap_sku: HOUSEHOLD_1_306  # alternate slower than the 21-day high-severity horizon, exercises POL-05
 trap_lead_time_days: 25
 
 # Procedure by persona, severity and disruption type. Severity 1 follows severity 2. Severity 5 always escalates.

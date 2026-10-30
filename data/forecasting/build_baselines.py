@@ -1,10 +1,11 @@
-"""Fit a simple baseline per SKU offline and cache a 30-day forecast. Never fits inside a timed run.
+"""Fit a simple baseline per SKU and location offline and cache a 30-day forecast. Never fits inside a timed run.
 
-Each SKU uses whichever of seasonal naive and a fixed SARIMA has the lower MAE on the last 28 days.
+Each series uses whichever of seasonal naive and a fixed SARIMA has the lower MAE on the last 28 days.
 Model orders are fixed, not searched.
 """
 import json
 import warnings
+from collections import Counter
 from pathlib import Path
 
 import numpy as np
@@ -34,8 +35,8 @@ MODELS = {"seasonal_naive": seasonal_naive, "sarima_101_011_7": sarima}
 
 def main():
     sales = pd.read_csv(ROOT / "data/m5/derived/sales.csv")
-    out = {}
-    for sku, group in sales.groupby("sku"):
+    out: dict[str, dict] = {}
+    for (location, sku), group in sales.groupby(["location", "sku"]):
         y = group.sort_values("date")["units"].to_numpy(dtype=float)[-TRAIN_DAYS:]
         train, test = y[:-HOLDOUT], y[-HOLDOUT:]
         errors = {}
@@ -43,15 +44,16 @@ def main():
             try:
                 errors[name] = float(np.abs(model(train, HOLDOUT) - test).mean())
             except (ValueError, np.linalg.LinAlgError) as e:
-                print("skip", sku, name, e)
+                print("skip", location, sku, name, e)
         best = min(errors, key=errors.get)
-        out[sku] = {
+        out.setdefault(sku, {})[location] = {
             "model": best,
             "holdout_mae": {k: round(v, 3) for k, v in errors.items()},
             "daily_forecast": [round(float(v), 3) for v in MODELS[best](y, HORIZON)],
         }
-        print(sku, best, out[sku]["holdout_mae"])
     (ROOT / "data/forecasting/baselines.json").write_text(json.dumps(out, indent=1), encoding="utf-8")
+    chosen = Counter(e["model"] for by_loc in out.values() for e in by_loc.values())
+    print("series", sum(chosen.values()), dict(chosen))
 
 
 if __name__ == "__main__":

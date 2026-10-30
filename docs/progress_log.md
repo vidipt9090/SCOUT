@@ -30,3 +30,5 @@ Format: date | task | command | pass or fail | one line of output.
 2026-10-30 | B2.12 | make test | pass | 37 passed
 2026-10-30 | G2 | wipe generated files, make data, make test | pass | rebuilt from scratch, 37 passed
 2026-10-30 | B2.3 rework | make vendors docs rag-index rag-probe, make test | pass | 8 vendors, 32 agreements
+2026-10-30 | D8 rework | make data, make check | pass | 268 candidates, 15 SKUs, 60 forecast series, 8 tools
+2026-10-30 | G2 recheck | wipe generated files, make data, make test | pass | 39 passed, exact clause 18/18

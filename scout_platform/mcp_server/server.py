@@ -3,7 +3,7 @@ import json
 import os
 from functools import lru_cache
 from pathlib import Path
-from typing import Any, Literal
+from typing import Any, Literal, get_args
 
 import httpx
 import pandas as pd
@@ -29,7 +29,8 @@ ROOT = Path(__file__).parents[2]
 BLACKBOARD_URL = os.environ.get("BLACKBOARD_URL", "http://127.0.0.1:8101")
 RECENT_DAYS = 90
 MAX_HISTORY_DAYS = 1095
-LOCATIONS = ("plant", "retail_dc", "peer_dc_1", "peer_dc_2")
+Location = Literal["plant", "retail_dc", "peer_dc_1", "peer_dc_2"]
+LOCATIONS = get_args(Location)
 
 mcp = FastMCP("scout", host="127.0.0.1", port=int(os.environ.get("MCP_PORT", "8102")))
 
@@ -42,9 +43,14 @@ def _sales() -> pd.DataFrame:
     return pd.read_csv(ROOT / "data/m5/derived/sales.csv")
 
 
-def _check_sku(sales: pd.DataFrame, sku: str) -> None:
+def _series(sku: str, location: str) -> pd.DataFrame:
+    """One SKU's real sales rolled up to one location, oldest first."""
+    if location not in LOCATIONS:
+        raise ValueError(f"unknown location: {location!r}")
+    sales = _sales()
     if sku not in set(sales["sku"]):
         raise ValueError(f"unknown sku: {sku!r}")
+    return sales[(sales["sku"] == sku) & (sales["location"] == location)].sort_values("date")
 
 
 @lru_cache(maxsize=1)
@@ -53,13 +59,11 @@ def _rag_collection():
 
 
 @mcp.tool()
-def get_sales_history(sku: str, days: int) -> SalesHistory:
-    """Daily unit sales for a SKU, most recent `days` days, up to simulated today."""
+def get_sales_history(sku: str, location: Location, days: int) -> SalesHistory:
+    """Daily unit sales for a SKU at a location, most recent `days` days, up to simulated today."""
     if not 1 <= days <= MAX_HISTORY_DAYS:
         raise ValueError(f"days must be 1..{MAX_HISTORY_DAYS}")
-    sales = _sales()
-    _check_sku(sales, sku)
-    rows = sales[sales["sku"] == sku].sort_values("date").tail(days)
+    rows = _series(sku, location).tail(days)
     return SalesHistory(
         sku=sku,
         days=[SalesDay(date=r.date, units=int(r.units)) for r in rows.itertuples()],
@@ -67,15 +71,12 @@ def get_sales_history(sku: str, days: int) -> SalesHistory:
 
 
 @mcp.tool()
-def get_inventory(sku: str, location: Literal["plant", "retail_dc", "peer_dc_1", "peer_dc_2"]) -> Inventory:
+def get_inventory(sku: str, location: Location) -> Inventory:
     """Stock on hand, safety floor and days of cover for a SKU at a location."""
-    if location not in LOCATIONS:
-        raise ValueError(f"unknown location: {location!r}")
-    sales = _sales()
-    _check_sku(sales, sku)
+    series = _series(sku, location)
     inventory = pd.read_csv(ROOT / "data/synth/inventory.csv")
     row = inventory[(inventory["sku"] == sku) & (inventory["location"] == location)].iloc[0]
-    daily = float(sales[sales["sku"] == sku].sort_values("date").tail(RECENT_DAYS)["units"].mean())
+    daily = float(series.tail(RECENT_DAYS)["units"].mean())
     return Inventory(
         location=location,
         sku=sku,
@@ -120,11 +121,12 @@ def get_policy_limits(persona: Literal["plant", "retail_dc"]) -> PolicyLimits:
 @mcp.tool()
 def forecast(
     sku: str,
+    location: Location,
     horizon_days: int,
     disruption_type: Literal["port_delay", "strike", "weather"],
     severity: int,
 ) -> Forecast:
-    """Cached baseline demand, revised by the configured severity multiplier. The numbers are not LLM-made."""
+    """Cached baseline demand at a location, revised by the configured severity multiplier. The numbers are not LLM-made."""
     if not 1 <= severity <= 5:
         raise ValueError("severity must be 1..5")
     if not 1 <= horizon_days <= 30:
@@ -135,7 +137,9 @@ def forecast(
     baselines = json.loads((ROOT / "data/forecasting/baselines.json").read_text(encoding="utf-8"))
     if sku not in baselines:
         raise ValueError(f"unknown sku: {sku!r}")
-    entry = baselines[sku]
+    if location not in LOCATIONS:
+        raise ValueError(f"unknown location: {location!r}")
+    entry = baselines[sku][location]
     baseline = sum(entry["daily_forecast"][:horizon_days]) / horizon_days
     multiplier = effects["demand_multiplier"][disruption_type][severity]
     return Forecast(

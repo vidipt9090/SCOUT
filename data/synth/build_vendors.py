@@ -33,7 +33,7 @@ def main():
                 "role": role,
                 "tier": roster[vendor_id]["tier"],
                 "lead_time_days": lead,
-                "moq": max(params["min_moq"], round(s["mean_daily_last_year"] * moq_days[moq_key])),
+                "moq": max(params["min_moq"], round(s["mean_daily_last_year"]["retail_dc"] * moq_days[moq_key])),
                 "penalty_pct": roster[vendor_id]["penalty_pct"],
                 "contract_id": f"CON-{vendor_id}-{s['sku']}",
                 "approved_contract": True,

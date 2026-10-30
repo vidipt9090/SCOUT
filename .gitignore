@@ -18,3 +18,5 @@ sell_prices.csv
 runs/
 data/rag/chroma/
 data/snapshots/*.json
+data/m5/derived/
+data/synth/inventory.csv

@@ -38,6 +38,13 @@ Requirement 7: no LangChain, LangGraph, LangSmith, AutoGen, LlamaIndex, Semantic
 13. The brief says different messaging architectures "need to be tried and compared", so B4.9 is treated as required and removed from the cut order in plan section 9.
 14. The Signal `snippet` uses newsdata.io `description`, because `content` is paid only.
 
+15. News source is GNews, not newsdata.io (project owner's decision, 2026-10-30). GNews cannot reach M5 dates; see `docs/spikes/news.md`. Plan references to newsdata.io and `NEWSDATA_API_KEY` now mean GNews and `GNEWS_API_KEY`.
+16. M5 sales end on 2016-05-22 (d_1941). The calendar runs to 2016-06-19, but those days have no sales. 2016-05-22 is simulated today.
+17. Store is CA_3, which had the most steady SKUs (254). The 15 SKUs are 7 FOODS, 5 HOBBIES and 3 HOUSEHOLD, capped at 7 per category. The extract keeps the last 1095 days.
+18. Retail DC and peer DC safety floors (7 and 10 days) and peer cover (35 to 45 days) are assumptions, not plan values.
+19. Vendor MOQs in plan 6.4 (200 to 1000 units) are too large for these SKUs, which sell about 4 to 17 units a day. B2.3 must scale MOQs to demand, or every order breaches POL-01 and Plant over-orders by months.
+20. The M5 extract and inventory are git-ignored until M5 terms are checked. `make m5-extract` and `make inventory` rebuild them from the raw files.
+
 ## Open gaps
 
 - Docker is not installed on this machine. K1 needs it.

@@ -1,12 +1,26 @@
 # S1 News
 
-Result: pass. One live call to `https://newsdata.io/api/1/latest` with the key in the `X-ACCESS-KEY` header was saved as a snapshot and replayed with sockets disabled.
+Source changed from newsdata.io to GNews on 2026-10-30 at the project owner's request, with the aim of matching news to M5 dates. Testing showed GNews cannot do that. It is kept as the source of current real news.
 
-Free-plan findings from the live response:
-- 10 articles per call. A daily credit counter of 200 was reported (`x-api-limit-remaining: 199` after one call).
-- A rate-limit header of 60 was reported. Its time window was not confirmed.
-- The newest article was about 12 hours old, consistent with a delay on the free plan.
-- `content` returns "ONLY AVAILABLE IN PAID PLANS". The Signal `snippet` must use `description`.
-- `source_id` and `source_url` are available for corroborating domains.
+Result: pass for current news, fail for M5-era news. The newsdata.io call, snapshot and offline replay passed. The GNews call passed. The GNews snapshot and replay are built in B2.8.
 
-Redistribution terms are not confirmed, so snapshots are git-ignored for now. A fresh clone therefore needs `make news-snapshot` and a key.
+## GNews findings (live tests with the free key, and gnews.io docs and pricing, 2026-10-30)
+
+| Window | Result |
+|---|---|
+| 2016-05-01 to 2016-06-19 | `totalArticles` 0 |
+| 2025-10 | 1 article counted, then removed by the plan |
+| Recent, `port strike` | 2804 counted, 10 returned, dated 2026-10-16 to 2026-10-28 |
+
+- Free plan: 100 requests a day, up to 10 articles per request, last 30 days, 12-hour delay, truncated `content`, non-commercial use only.
+- Paid plans start at EUR 49.99 a month and reach back only to 2020, so no plan covers M5 (sales 2011 to May 2016).
+- Older articles are removed silently: the call returns 200, a `totalArticles` count, no articles, and an `articlesRemovedFromResponse` field. The news client must check that field.
+- A quoted query with `from` and `to` inside the 30-day window returned 0, while the same words unquoted returned articles. Use unquoted queries.
+- The `X-Api-Key` header works. The docs show only `apikey` in the query string. Use the header so the key stays out of URLs and logs.
+- `source.url` gives the domain for corroboration.
+
+Redistribution terms are not confirmed, so snapshots stay git-ignored. A fresh clone therefore needs `make news-snapshot` and a key.
+
+## Consequence for M5
+
+News dates and sales dates cannot align with GNews. The run treats the last M5 sales day as simulated today, and news text comes from replayed snapshots plus planted scenario items.

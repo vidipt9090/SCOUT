@@ -9,7 +9,7 @@ PY_DECISION := .venvs/decision/$(BIN)/python
 PY_PLATFORM := .venvs/scout_platform/$(BIN)/python
 PYTHON312 ?= python3.12
 
-.PHONY: setup up down test news-snapshot m5-extract data rag-index run-one pilot report schemas
+.PHONY: inventory setup up down test news-snapshot m5-extract data rag-index run-one pilot report schemas
 
 setup:
 	for s in sensing decision scout_platform; do \
@@ -23,5 +23,11 @@ test:
 schemas:
 	$(PY_PLATFORM) -m contracts.export_schemas
 
-up down news-snapshot m5-extract data rag-index run-one pilot report:
+m5-extract:
+	$(PY_PLATFORM) data/m5/extract.py
+
+inventory:
+	$(PY_PLATFORM) data/synth/build_inventory.py
+
+up down news-snapshot data rag-index run-one pilot report:
 	@echo "$@ is not built yet; see SCOUT_IMPLEMENTATION_PLAN.md" && exit 1

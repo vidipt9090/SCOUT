@@ -15,3 +15,7 @@ Format: date | task | command | pass or fail | one line of output.
 2026-10-30 | S3 | python spikes/s3_adk.py | pass | tool and output_schema together, 6.8s
 2026-10-30 | S7 | python spikes/s7_probe.py | pass | gemini-3.1-flash-lite ok, 1.3s
 2026-10-30 | make | make test | pass | 13 passed
+2026-10-30 | S1 GNews | python spikes/s1c_gnews.py | pass for current news, fail for 2016 | 2804 counted, 10 returned; 2016 window 0
+2026-10-30 | B2.1 | make m5-extract | pass | CA_3, 15 SKUs, 16425 rows, simulated_today 2016-05-22
+2026-10-30 | B2.2 | make inventory | pass | 60 rows, 4 locations
+2026-10-30 | B2.1-2 | make test | pass | 15 passed

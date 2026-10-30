@@ -71,8 +71,10 @@ Requirement 7: no LangChain, LangGraph, LangSmith, AutoGen, LlamaIndex, Semantic
 41. In the poison test, later layers are scripted replays of the attempted tool call or plan, labelled as such in `results/poison_report.md`, because attacks rarely survive to reach them live.
 42. The ablation showed no difference: with sanitiser, screen and keyword filter off, Scout A still marked 0 of 12 poison items relevant. On this set the Scout prompt alone resisted, so the ablation is not evidence that the earlier layers are needed. One item, a fabricated catastrophe, was marked relevant with layers on and relies on the corroboration gate.
 43. Theme grouping merges every story of one type. On real news it merged unrelated port stories into one severity 5 assessment, unanimously, and the run correctly escalated. This is a known limit of deterministic grouping, accepted for this evaluation.
-44. Prices in `configs/prices.yaml` are third-party reports of Google's list price, because Google's pricing page could not be loaded. The daily free-tier limit is unconfirmed: sources say 500 to 1,500 a day. 492 calls were logged without a daily block.
+44. Prices in `configs/prices.yaml` are third-party reports of Google's list price, because Google's pricing page could not be loaded. The free tier allows 500 requests a day on `gemini-3.1-flash-lite`, confirmed by the 429 error on 2026-10-31. Development used all of it.
 45. The CoT Planner can output a fractional quantity (678.477). It is left unrounded, because the Planner's output is not altered.
+
+46. The pilot grid is 48 runs: 4 persona checks at medium severity, 32 core, 8 direct-messaging pairs and 4 few-shot Scout pairs. At about 12 calls a run it needs about 560 calls, over the 500-a-day limit, so it spans two daily resets. The harness resumes, and quota failures are not counted as results. Few-shot Scout runs were added so Requirement 8 has data.
 
 ## Open gaps
 

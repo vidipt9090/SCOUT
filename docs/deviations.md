@@ -56,6 +56,15 @@ Requirement 7: no LangChain, LangGraph, LangSmith, AutoGen, LlamaIndex, Semantic
 
 29. Vendors are 8 shared suppliers (V01 to V08), with one supply agreement per vendor and SKU: 32 agreements. Tier and penalty belong to the vendor; lead time, MOQ and unit cost belong to the agreement. This replaces one invented vendor per agreement, which was unrealistic.
 
+30. Planner retrieval runs in code with fixed queries before both variants, and `rag_search` is not an LLM tool. The plan listed it as a Planner tool, but LLM-chosen queries would break its retrieval-equality rule. Persona policy rules are always part of the retrieved set.
+31. The LLM drafts a `PlanDraft`; code adds ids and computes cost. Same pattern in the Scouts: the LLM supplies judgement, code copies source fields.
+32. Counter-plans are built deterministically and rechecked against the rules. The plan did not fix how they are generated.
+33. The LLM reviewer does not name POL ids. It answers `action_matches_procedure` and `obeys_embedded_command`. A failed match is reported as `UNSUPPORTED-ACTION`, and always escalates.
+34. POL-01 baseline volume is defined as baseline daily demand x disruption horizon. POL-02 applies only to plans that place an order, because `monitor` cannot add stock. POL-03 treats any single-vendor Tier 3 plan as over Retail DC's 10% share. `MitigationPlan.vendor_id` holds the donor for `stock_transfer`, because `contracts-v1` has no donor field. MOQ breaches are reported as `CON-MOQ`.
+35. The Sensing crew writes to the blackboard from code through MCP, not as an LLM tool, so a Signal cannot be skipped. The Decision core uses MCP tools natively through `McpToolset`.
+36. Gemini's free tier allows about 15 calls a minute on `gemini-3.1-flash-lite`, observed from 429 errors. `scout_platform/rate_limit.py` paces both services to 12 a minute, and waits are logged as `rate_wait`. The daily limit is unknown. CrewAI's `after_llm_call` is unreliable, as S2 found.
+37. Planner prompts were tuned on the 12 G3 cases, which are the same scenarios the pilot uses. Results on them are not an independent test.
+
 ## Open gaps
 
 - M5 and GNews redistribution terms are unchecked, so generated data and snapshots are git-ignored. A clean clone needs the raw M5 files and a GNews key.

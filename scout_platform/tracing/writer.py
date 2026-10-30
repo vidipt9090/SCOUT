@@ -17,6 +17,7 @@ EVENT_TYPES = frozenset(
         "agent_end",
         "guardrail",
         "error",
+        "rate_wait",
     }
 )
 

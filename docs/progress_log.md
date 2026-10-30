@@ -32,3 +32,9 @@ Format: date | task | command | pass or fail | one line of output.
 2026-10-30 | B2.3 rework | make vendors docs rag-index rag-probe, make test | pass | 8 vendors, 32 agreements
 2026-10-30 | D8 rework | make data, make check | pass | 268 candidates, 15 SKUs, 60 forecast series, 8 tools
 2026-10-30 | G2 recheck | wipe generated files, make data, make test | pass | 39 passed, exact clause 18/18
+2026-10-31 | B0 | git tag contracts-v1 | pass | tag created on local repo
+2026-10-31 | B3.3-5 | python eval/g3_matrix.py core | pass | correct 12/12, degraded 0
+2026-10-31 | B3.4, B3.6 | python eval/g3_matrix.py variants | pass | correct 8/8, retrieval identical across variants: True
+2026-10-31 | B3.1-2 | python eval/g3_sensing.py port_delay_high, single_domain_high | pass | severity 4 both, 1 domain on the single-source case, about 12 s
+2026-10-31 | B3 smoke | python eval/g3_poison_probe.py | pass | 0 of 5 scouted poison items relevant; 7 of 12 removed by keyword filter
+2026-10-31 | B3.7 | make test | pass | 59 passed

@@ -1,0 +1,22 @@
+# Parameters behind the vendor pack and RAG documents, so thresholds are deliberate.
+seed: 3101
+moq_days_of_demand: {primary: 5, alternate: 7}
+min_moq: 10
+unit_cost_share_of_price: 0.6
+plant_critical_categories: [FOODS]
+
+# Each of these SKUs also has a compliant alternate, so one correct action still exists.
+tier3_trap_sku: FOODS_3_076     # tempting Tier 3 alternate, exercises POL-03
+lead_time_trap_sku: HOUSEHOLD_1_453  # alternate slower than the 21-day high-severity horizon, exercises POL-05
+trap_lead_time_days: 25
+
+# Procedure by persona, severity and disruption type. Severity 1 follows severity 2. Severity 5 always escalates.
+procedure:
+  plant:
+    2: {port_delay: reorder, strike: reorder, weather: reorder}
+    3: {port_delay: reorder_expedited, strike: switch_supplier, weather: reorder_expedited}
+    4: {port_delay: switch_supplier, strike: switch_supplier, weather: switch_supplier}
+  retail_dc:
+    2: {port_delay: monitor, strike: monitor, weather: monitor}
+    3: {port_delay: stock_transfer, strike: stock_transfer, weather: stock_transfer}
+    4: {port_delay: switch_supplier, strike: switch_supplier, weather: switch_supplier}

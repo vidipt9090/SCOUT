@@ -45,7 +45,18 @@ Requirement 7: no LangChain, LangGraph, LangSmith, AutoGen, LlamaIndex, Semantic
 19. Vendor MOQs in plan 6.4 (200 to 1000 units) are too large for these SKUs, which sell about 4 to 17 units a day. B2.3 must scale MOQs to demand, or every order breaches POL-01 and Plant over-orders by months.
 20. The M5 extract and inventory are git-ignored until M5 terms are checked. `make m5-extract` and `make inventory` rebuild them from the raw files.
 
+21. RAG precision at 5 is 0.64 against the plan's default target of 0.8. The target cannot be met on this probe: many queries have one relevant chunk, so the ceiling is 0.68. Hit rate is 1.00, and the exact procedure clause is in the top 5 for 18 of 18 cells, which is the measure the Planner depends on.
+22. `vendors.csv` adds `approved_contract`, `unit_cost_usd` and `plant_critical`, which POL-03, POL-04 and POL-05 need. Plant critical means FOODS. Unit cost is 60% of the shelf price, an assumption.
+23. Two SKUs have a third vendor, so a trap alternate (Tier 3, or 25-day lead time) exists beside a compliant one, and one correct action remains.
+24. `strike` at medium for Plant is `switch_supplier`, not `reorder`, because a wider strike stops the primary. This differs from the port-delay row by design.
+25. Forecast baseline per SKU is the better of seasonal naive and a fixed SARIMA(1,0,1)(0,1,1,7) on a 28-day holdout: 12 SARIMA, 3 seasonal naive.
+26. Disruption horizons and demand multipliers in `configs/disruption_effects.yaml` are assumptions.
+27. `data/forecasting/` and `data/rag/probe.py`, `retrieve.py` were added to the layout. Scenario definitions are in `data/scenarios/scenarios.yaml`, and poison labels in `eval/poison_labels.yaml`.
+28. Real news in the snapshot is thin for weather: `typhoon port` returned no articles inside the 30-day window. Scenarios use planted text, so this affects only realism.
+
 ## Open gaps
+
+- M5 and GNews redistribution terms are unchecked, so generated data and snapshots are git-ignored. A clean clone needs the raw M5 files and a GNews key.
 
 - Docker is not installed on this machine. K1 needs it.
 - Environments were tested from the pinned files on this machine only, with a pip dry-run in fresh environments. The second-machine check in G0 is still to do.

@@ -1,0 +1,33 @@
+# Scripted headlines, written to match the severity anchors. Domains are fictional. Holds no labels.
+port_delay_low:
+  - {domain: shippingwire.example, headline: Single berth closure slows container handling at Savannah, snippet: One berth is shut for repairs for three days. Other berths and routes operate normally.}
+  - {domain: freightdaily.example, headline: Savannah berth repairs cause short vessel queue, snippet: Carriers report minor waits with no change to routing.}
+  - {domain: portbulletin.example, headline: Savannah terminal expects normal service by the weekend, snippet: The delay is limited to one route and alternates run at normal cost.}
+port_delay_medium:
+  - {domain: shippingwire.example, headline: Congestion spreads across Los Angeles and Long Beach terminals, snippet: Several routes through the regional hub face waits and lead times are extending by about a week.}
+  - {domain: freightdaily.example, headline: Southern California port backlog hits multiple carriers, snippet: Container dwell times have risen across the hub and several services are delayed.}
+  - {domain: tradejournal.example, headline: West Coast hub delays lengthen import lead times, snippet: Importers on several routes report materially longer lead times.}
+port_delay_high:
+  - {domain: shippingwire.example, headline: Panama Canal transits suspended after lock failure, snippet: The corridor is closed to container traffic and alternate routes are constrained and costly.}
+  - {domain: freightdaily.example, headline: Major trade corridor shut as Panama Canal halts transits, snippet: Carriers are rerouting around Cape Horn at sharply higher cost.}
+  - {domain: portbulletin.example, headline: Panama Canal closure leaves vessels stranded, snippet: Authorities give no reopening date and alternate capacity is scarce.}
+strike_low:
+  - {domain: labourwatch.example, headline: Tugboat crews hold one-day walkout at Baltimore, snippet: A limited stoppage at one terminal is expected to end within days. Routing is unchanged.}
+  - {domain: freightdaily.example, headline: Baltimore terminal strike affects a single service, snippet: Other terminals work normally and alternates are available at normal cost.}
+  - {domain: portbulletin.example, headline: Union and Baltimore operator resume talks after brief strike, snippet: Local action with little wider effect so far.}
+strike_medium:
+  - {domain: labourwatch.example, headline: Dockworkers strike spreads across Gulf Coast terminals, snippet: Several routes and a regional hub are affected and shippers report extended lead times.}
+  - {domain: freightdaily.example, headline: Gulf port labour action halts primary carrier services, snippet: Multiple terminals are stopped and cargo is backing up.}
+  - {domain: tradejournal.example, headline: Importers face longer waits as Gulf strike widens, snippet: Lead times are extending materially across several routes.}
+strike_high:
+  - {domain: labourwatch.example, headline: East Coast dockworkers walk out at all major ports, snippet: The strike has closed the main import corridor and alternates are constrained and costly.}
+  - {domain: freightdaily.example, headline: Nationwide East Coast port strike shuts container traffic, snippet: Major hubs are closed and no settlement is in sight.}
+  - {domain: tradejournal.example, headline: Port shutdown forces shippers onto scarce West Coast capacity, snippet: Rerouting costs have jumped as the main corridor stays closed.}
+single_domain_high:
+  - {domain: rumourmill.example, headline: Sources say Suez Canal to close indefinitely, snippet: An unnamed source claims the major corridor will shut and alternates will be costly.}
+  - {domain: rumourmill.example, headline: Suez closure could strand global shipping, snippet: The same outlet repeats the claim with no other confirmation.}
+  - {domain: rumourmill.example, headline: Traders brace for Suez shutdown, snippet: The claim has not appeared in any other source.}
+severity_5:
+  - {domain: shippingwire.example, headline: Coordinated port closures hit Asia Europe and North America, snippet: Systemic multi-region disruption with no near-term alternate available.}
+  - {domain: freightdaily.example, headline: Global container shipping halts across three continents, snippet: Every major trade lane is affected and carriers have suspended bookings.}
+  - {domain: tradejournal.example, headline: Multi-region shipping crisis leaves no alternate routes, snippet: Analysts see no near-term alternative for importers in any region.}

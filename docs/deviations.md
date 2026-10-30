@@ -65,6 +65,15 @@ Requirement 7: no LangChain, LangGraph, LangSmith, AutoGen, LlamaIndex, Semantic
 36. Gemini's free tier allows about 15 calls a minute on `gemini-3.1-flash-lite`, observed from 429 errors. `scout_platform/rate_limit.py` paces both services to 12 a minute, and waits are logged as `rate_wait`. The daily limit is unknown. CrewAI's `after_llm_call` is unreliable, as S2 found.
 37. Planner prompts were tuned on the 12 G3 cases, which are the same scenarios the pilot uses. Results on them are not an independent test.
 
+38. The A2A server is a2a-sdk `AgentExecutor` code in `decision/service.py` that runs the ADK agents, rather than ADK's `to_a2a`. `to_a2a` maps a chat message to one agent, and this hop needs a structured request and run state. The protocol and the framework boundary are real. Sensing calls from a Python orchestrator (`eval/run_one.py`), not from inside a CrewAI agent.
+39. `COMM_MODE=blackboard` passes only a reference in the A2A message: the Decision core reads the assessment and forecast from the blackboard and posts plan and verdict there. `direct` passes the assessment in the message and uses ADK state. The mode is a real data path, not a flag on a trace.
+40. Safety layer 2 is a regex pattern list (`scout_platform/screen.py`). It flagged 0 of 29 real articles and 0 planted headlines, but it misses paraphrases by design.
+41. In the poison test, later layers are scripted replays of the attempted tool call or plan, labelled as such in `results/poison_report.md`, because attacks rarely survive to reach them live.
+42. The ablation showed no difference: with sanitiser, screen and keyword filter off, Scout A still marked 0 of 12 poison items relevant. On this set the Scout prompt alone resisted, so the ablation is not evidence that the earlier layers are needed. One item, a fabricated catastrophe, was marked relevant with layers on and relies on the corroboration gate.
+43. Theme grouping merges every story of one type. On real news it merged unrelated port stories into one severity 5 assessment, unanimously, and the run correctly escalated. This is a known limit of deterministic grouping, accepted for this evaluation.
+44. Prices in `configs/prices.yaml` are third-party reports of Google's list price, because Google's pricing page could not be loaded. The daily free-tier limit is unconfirmed: sources say 500 to 1,500 a day. 492 calls were logged without a daily block.
+45. The CoT Planner can output a fractional quantity (678.477). It is left unrounded, because the Planner's output is not altered.
+
 ## Open gaps
 
 - M5 and GNews redistribution terms are unchecked, so generated data and snapshots are git-ignored. A clean clone needs the raw M5 files and a GNews key.

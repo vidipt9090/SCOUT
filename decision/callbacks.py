@@ -1,7 +1,9 @@
 """ADK callbacks: shared trace events, tool caps, and capture of what tools really returned."""
+import json
 from typing import Any
 
 from scout_platform.rate_limit import await_slot
+from scout_platform.tool_guard import check_tool_call, check_tool_result
 from scout_platform.tracing.writer import TraceWriter
 
 SYNTHETIC_TOOL = "set_model_response"  # ADK's own tool for structured output, not one of ours
@@ -61,6 +63,10 @@ def before_tool(tool, args: dict[str, Any], tool_context):
     state = tool_context.state
     agent = tool_context.agent_name
     writer_for(state).event(agent, "tool_start", tool_name=tool.name, args=args)
+    reason = check_tool_call(agent, tool.name, args, state["sku"], state["persona"], json.loads(state["assessment_json"]))
+    if reason:
+        writer_for(state).event(agent, "guardrail", tool_name="layer3_before_tool", args=args, error=reason)
+        return {"error": f"Blocked: {reason}."}
     cap = TOOL_CAPS.get(agent)
     if cap is None:
         return None
@@ -78,8 +84,15 @@ def after_tool(tool, args: dict[str, Any], tool_context, tool_response):
         return None
     state = tool_context.state
     writer_for(state).event(tool_context.agent_name, "tool_end", tool_name=tool.name)
-    if tool.name == "forecast" and isinstance(tool_response, dict):
-        state["forecast_tool_result"] = tool_response.get("structuredContent")
+    if not isinstance(tool_response, dict) or "error" in tool_response:  # a specialist's text, or a refusal
+        return None
+    structured = tool_response.get("structuredContent")
+    reason = check_tool_result(tool.name, structured)
+    if reason:
+        writer_for(state).event(tool_context.agent_name, "guardrail", tool_name="layer4_after_tool", error=reason)
+        return {"error": f"Rejected: {reason}."}
+    if tool.name == "forecast":
+        state["forecast_tool_result"] = structured
     return None
 
 

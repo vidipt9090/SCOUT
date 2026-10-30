@@ -10,6 +10,7 @@ from decision import facts
 from decision.agents import CONFIG, build_guardrail, build_oracle, build_planner
 from decision.callbacks import AGENT_CALLBACKS
 from scout_platform.prompts import prompt
+from scout_platform.screen import screen
 from scout_platform.tracing.writer import TraceWriter
 
 APP = "scout_decision"
@@ -40,13 +41,28 @@ def build_root(architecture: str, strategy: str):
 
 
 async def run_decision(
-    assessment: DisruptionAssessment, sku: str, persona: str, architecture: str, strategy: str, run_id: str
+    assessment: DisruptionAssessment,
+    sku: str,
+    persona: str,
+    architecture: str,
+    strategy: str,
+    run_id: str,
+    comm_mode: str = "direct",
 ) -> DecisionResult:
+    hit = screen(assessment.summary)
+    if hit:
+        TraceWriter(run_id, "adk").event("decision_core", "guardrail", tool_name="layer2_before_model", error=f"{hit} in summary")
+        verdict = GuardrailVerdict(
+            plan_id=f"plan-{run_id}", decision="escalate", violated_rules=["POL-08"], checker="rules",
+            counter_plan=None, reasons=f"Assessment summary failed screening: {hit}.",
+        )
+        return DecisionResult(forecast=None, forecast_issues=[], plan=None, verdict=verdict, retrieved_doc_ids=[], degraded=True)
     root = build_root(architecture, strategy)
     runner = InMemoryRunner(agent=root, app_name=APP)
     state = {
         "run_id": run_id,
         "persona": persona,
+        "comm_mode": comm_mode,
         "persona_context": facts.persona_context(persona),
         "assessment_json": assessment.model_dump_json(),
         "sku": sku,

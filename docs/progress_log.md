@@ -38,3 +38,10 @@ Format: date | task | command | pass or fail | one line of output.
 2026-10-31 | B3.1-2 | python eval/g3_sensing.py port_delay_high, single_domain_high | pass | severity 4 both, 1 domain on the single-source case, about 12 s
 2026-10-31 | B3 smoke | python eval/g3_poison_probe.py | pass | 0 of 5 scouted poison items relevant; 7 of 12 removed by keyword filter
 2026-10-31 | B3.7 | make test | pass | 59 passed
+2026-10-31 | B4.1-2 | make run-one SCENARIO=strike_medium PERSONA=retail_dc | pass | stock_transfer, 44.15 s, one trace with crewai and adk events
+2026-10-31 | B4.3-4 | make poison | pass | 12 of 12 stopped, 1 reached Decision as relevant, ablation showed no difference
+2026-10-31 | B4.7 | make view RUN=run-strike-low-823098f6 | pass | runs/reports html written
+2026-10-31 | B4.9 | make run-one COMM_MODE=blackboard and direct | pass | both correct action; blackboard topics signals, assessment, forecast, plan, verdict
+2026-10-31 | B4 | make run-one SCENARIO=real_news | pass | 29 real articles, severity 5, escalated, 59.6 s
+2026-10-31 | B4 | make run-one ARCH=hierarchical | pass | 46.47 s and 77.01 s
+2026-10-31 | B4 | make test | pass | 82 passed

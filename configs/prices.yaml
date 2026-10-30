@@ -1,3 +1,5 @@
-# Placeholder until S7 picks the backbone. USD per million tokens. [verify]
+# USD per million tokens. Third-party reports of Google's list price, 2026-10-31; Google's page could not be loaded.
+# Runs on the free tier cost nothing in practice. These figures estimate what paid use would cost. [verify]
 currency: USD
-models: {}
+models:
+  gemini-3.1-flash-lite: {input_per_mtok: 0.25, output_per_mtok: 1.50}

@@ -17,19 +17,19 @@ Copied from plan section 2. Status here is the current state, not the Monday tar
 | 10 | End-to-end evaluation, cost, runtime | Pilot with latency, tokens and estimated cost | In progress | `results/` table |
 | 11 | Cloud deployment | Containers, one cloud target | Pending | Dockerfile; URL if reached |
 
-## Current status (after G3, 2026-10-31)
+## Current status (after G4, 2026-10-31)
 
 | # | Status now | Evidence so far |
 |---|---|---|
-| 1a | In progress | Blackboard service and MCP access work; Sensing writes to it. The Decision core does not yet read from it |
-| 1b | Pending | Required by the brief; built in B4.9 |
-| 2 | Complete | `scout_platform/mcp_server/server.py`, 8 tools, contract tests in `tests/test_mcp_tools.py` |
-| 3 | Complete | `decision/render.py`, `tests/test_guardrail_rules.py` |
-| 4 | In progress | CoT, ReAct, self-consistency and reflection built; sequential and hierarchical run. Pilot table pending |
-| 5 | In progress | ADK callbacks and CrewAI hooks write traces; viewer pending |
-| 6 | In progress | SDK-level round trip only (`docs/spikes/a2a.md`); real agents connected in B4.1 |
+| 1a | Complete | `runs/blackboard/run-strike-low-823098f6.jsonl`: signals, assessment, forecast, plan, verdict. Decision reads it in `decision/service.py` |
+| 1b | In progress | `COMM_MODE` flag and one run per mode; comparison runs in the pilot |
+| 2 | Complete | `scout_platform/mcp_server/server.py`, 8 tools, `tests/test_mcp_tools.py` |
+| 3 | Complete | `decision/render.py`, `runs/records/*.result.json` |
+| 4 | In progress | Patterns built, both architectures run. Pilot table pending |
+| 5 | Complete (basic) | `decision/callbacks.py`, `sensing/hooks.py`; JSONL events include errors |
+| 6 | In progress | Real A2A hop between the CrewAI and ADK services, through an SDK executor (`docs/deviations.md` item 38). Not called from inside a CrewAI agent |
 | 7 | Complete | `docs/deviations.md`, dependency check |
-| 8 | In progress | Layers 1, 3, 4 and 5 partly built; before-model screen and poison report pending |
-| 9 | In progress | JSONL traces with prompt versions; viewer pending |
-| 10 | Pending | Pilot not run |
+| 8 | In progress | Six layers built, `results/poison_report.md`. Scripted later layers, and the ablation showed no difference |
+| 9 | In progress | Traces, `scout_platform/tracing/view.py`, signal and document ids. Scorer pending |
+| 10 | In progress | Latency, tokens and cost per run; pilot not run |
 | 11 | Pending | Docker not installed |

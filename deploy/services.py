@@ -11,9 +11,12 @@ from pathlib import Path
 ROOT = Path(__file__).parents[1]
 PID_FILE = ROOT / "runs/services.json"
 LOG_DIR = ROOT / "runs/logs"
+BIN = "Scripts/python.exe" if os.name == "nt" else "bin/python"
+DECISION_PY = str(ROOT / ".venvs/decision" / BIN)
 SERVICES = {
-    "blackboard": (8101, ["-m", "uvicorn", "sensing.blackboard_service.app:app", "--port", "8101", "--log-level", "warning"]),
-    "mcp": (8102, ["-m", "scout_platform.mcp_server.server"]),
+    "blackboard": (8101, sys.executable, ["-m", "uvicorn", "sensing.blackboard_service.app:app", "--port", "8101", "--log-level", "warning"]),
+    "mcp": (8102, sys.executable, ["-m", "scout_platform.mcp_server.server"]),
+    "decision": (8103, DECISION_PY, ["-m", "decision.service"]),
 }
 
 
@@ -28,18 +31,18 @@ def up():
     pids = {}
     flags = subprocess.DETACHED_PROCESS | subprocess.CREATE_NEW_PROCESS_GROUP if os.name == "nt" else 0
     env = {**os.environ, "PYTHONPATH": str(ROOT), "PYTHONUTF8": "1"}
-    for name, (port, args) in SERVICES.items():
+    for name, (port, python, args) in SERVICES.items():
         if listening(port):
             raise SystemExit(f"port {port} is already in use, run make down first")
         log = (LOG_DIR / f"{name}.log").open("a", encoding="utf-8")
         proc = subprocess.Popen(
-            [sys.executable, *args], cwd=ROOT, env=env, stdout=log, stderr=log, creationflags=flags
+            [python, *args], cwd=ROOT, env=env, stdout=log, stderr=log, creationflags=flags
         )
         pids[name] = proc.pid
     PID_FILE.write_text(json.dumps(pids), encoding="utf-8")
     deadline = time.time() + 60
     while time.time() < deadline:
-        if all(listening(port) for port, _ in SERVICES.values()):
+        if all(listening(port) for port, _, _ in SERVICES.values()):
             print("services up", pids)
             return
         time.sleep(0.5)

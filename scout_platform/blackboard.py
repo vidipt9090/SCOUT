@@ -1,0 +1,6 @@
+"""Blackboard topic names shared by both services."""
+SIGNALS_TOPIC = "signals"
+ASSESSMENT_TOPIC = "assessment"
+FORECAST_TOPIC = "forecast"
+PLAN_TOPIC = "plan"
+VERDICT_TOPIC = "verdict"

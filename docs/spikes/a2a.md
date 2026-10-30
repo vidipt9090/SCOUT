@@ -11,3 +11,7 @@ APIs used: server `A2AStarletteApplication`, `DefaultRequestHandler`, `InMemoryT
 Not proven: no CrewAI agent or ADK agent took part. Both sides were the a2a SDK running inside each framework's environment. To do in B4.1: serve the ADK agent with `google.adk.a2a.utils.agent_to_a2a.to_a2a`, and call it from the Sensing service. Requires an LLM key.
 
 Run: `bash spikes/run_keyless.sh`
+
+## Update at B4.1
+
+The hop now carries real runs: Sensing calls `decision/service.py`, which runs the ADK agents. `run_id` crosses the hop, so one trace holds both frameworks' events. See `docs/deviations.md` item 38.

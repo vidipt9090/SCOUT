@@ -13,6 +13,8 @@ from contracts import DisruptionAssessment, ForecastResult, GuardrailVerdict, Mi
 from decision import facts
 from decision.callbacks import AGENT_CALLBACKS, writer_for
 from decision.guardrail_rules import build_counter, check_rules
+from scout_platform.blackboard import FORECAST_TOPIC, PLAN_TOPIC, VERDICT_TOPIC
+from scout_platform.mcp_client import acall_tools
 from scout_platform.prompts import prompt
 
 MCP_URL = os.environ.get("MCP_URL", "http://127.0.0.1:8102/mcp")
@@ -57,7 +59,20 @@ def _event(agent: BaseAgent, ctx: InvocationContext, text: str, delta: dict) -> 
     )
 
 
-def _check_forecast(callback_context):
+async def _post(state, author: str, topic: str, payload: dict) -> None:
+    """Share an intermediate result on the blackboard. In direct mode, framework state alone carries it."""
+    if state.get("comm_mode") == "blackboard":
+        await acall_tools(
+            [("blackboard_write", {"run_id": state["run_id"], "author": author, "topic": topic, "payload": payload, "trust_level": "trusted"})]
+        )
+
+
+async def _latest(state, topic: str) -> dict | None:
+    page = (await acall_tools([("blackboard_read", {"run_id": state["run_id"], "topic": topic})]))[0]
+    return page["entries"][-1]["payload"] if page["entries"] else None
+
+
+async def _check_forecast(callback_context):
     """The Oracle copies numbers from the forecast tool. A mismatch or generic interpretation is flagged, not repaired."""
     state = callback_context.state
     AGENT_CALLBACKS["after_agent_callback"](callback_context)
@@ -77,7 +92,9 @@ def _check_forecast(callback_context):
         issues.append("no forecast output")
     state["forecast_issues"] = issues
     if issues:
-        writer_for(state).event("demand_oracle", "guardrail", error="; ".join(issues))
+        writer_for(state).event("demand_oracle", "guardrail", tool_name="layer5_output", error="; ".join(issues))
+    if tool:
+        await _post(state, "demand_oracle", FORECAST_TOPIC, tool)
 
 
 def build_oracle() -> LlmAgent:
@@ -107,10 +124,14 @@ class PlannerAgent(BaseAgent):
         persona, sku = state["persona"], state["sku"]
         hits = await facts.retrieve(assessment, persona, sku)
         retrieved_ids = list(dict.fromkeys(h["doc_id"] for h in hits))
+        if state.get("comm_mode") == "blackboard":
+            forecast = await _latest(state, FORECAST_TOPIC)
+        else:
+            forecast = state.get("forecast_tool_result")
         delta = {
             "retrieved_text": facts.format_hits(hits),
             "retrieved_doc_ids": retrieved_ids,
-            "forecast_facts": json.dumps(state.get("forecast_tool_result")),
+            "forecast_facts": json.dumps(forecast),
             "facts_text": await facts.planner_facts(persona, sku) if self.strategy == "cot" else "",
         }
         delta["planner_context"] = prompt("planner_context_v1").format(
@@ -156,12 +177,11 @@ class PlannerAgent(BaseAgent):
             estimated_cost=cost,
             strategy=self.strategy,
         )
+        await _post(state, self.name, PLAN_TOPIC, plan.model_dump(mode="json"))
         yield _event(self, ctx, plan.model_dump_json(), {"plan_json": plan.model_dump_json()})
 
     @staticmethod
     async def _cost(draft: dict, sku: str) -> float | None:
-        from scout_platform.mcp_client import acall_tools
-
         vendors = (await acall_tools([("lookup_vendor", {"sku": sku})]))[0]["vendors"]
         vendor = next((v for v in vendors if v["vendor_id"] == draft.get("vendor_id")), None)
         if vendor is None or draft.get("quantity") is None:
@@ -219,10 +239,13 @@ class GuardrailAgent(BaseAgent):
         rule_ctx = await facts.rule_context(assessment, plan.persona, plan.sku)
         violations = check_rules(plan, assessment, rule_ctx)
         rule_hits = [v.rule for v in violations]
-        writer.event(self.name, "guardrail", tool_name="rule_checker", error=", ".join(rule_hits) or None)
+        writer.event(self.name, "guardrail", tool_name="layer5_output", error=", ".join(rule_hits) or None)
+        if {"POL-07", "POL-09"} & set(rule_hits):
+            writer.event(self.name, "guardrail", tool_name="layer6_corroboration", error=", ".join(rule_hits))
 
         hits = await facts.retrieve(assessment, plan.persona, plan.sku)
-        cited = [h for h in hits if h["doc_id"] in plan.cited_doc_ids]
+        # The top procedure clause always goes to the reviewer, so a plan cannot hide it by not citing it.
+        cited = [hits[0], *(h for h in hits[1:] if h["doc_id"] in plan.cited_doc_ids)]
         delta = {"cited_text": facts.format_hits(cited)}
         yield _event(self, ctx, "rules checked", delta)
         async for event in self.reviewer.run_async(ctx):
@@ -254,6 +277,7 @@ class GuardrailAgent(BaseAgent):
             counter_plan=counter, reasons=reasons,
         )
         writer.event(self.name, "guardrail", tool_name="verdict", payload_ref=decision)
+        await _post(state, self.name, VERDICT_TOPIC, verdict.model_dump(mode="json"))
         yield _event(self, ctx, verdict.model_dump_json(), {"verdict_json": verdict.model_dump_json()})
 
 

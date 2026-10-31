@@ -1,0 +1,9 @@
+.env
+.git
+.venvs
+runs
+data/m5/derived
+data/rag/chroma
+data/snapshots
+**/__pycache__
+.pytest_cache

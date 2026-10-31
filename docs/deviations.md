@@ -76,9 +76,11 @@ Requirement 7: no LangChain, LangGraph, LangSmith, AutoGen, LlamaIndex, Semantic
 
 46. The pilot grid is 48 runs: 4 persona checks at medium severity, 32 core, 8 direct-messaging pairs and 4 few-shot Scout pairs. At about 12 calls a run it needs about 560 calls, over the 500-a-day limit, so it spans two daily resets. The harness resumes, and quota failures are not counted as results. Few-shot Scout runs were added so Requirement 8 has data.
 
+47. Docker is not installed, so `deploy/Dockerfile` and `deploy/compose.yaml` are untested. The compose file overrides the MCP and A2A bind address and MCP transport security at start-up, because those are fixed in code that stays frozen during the pilot. Requirement 11 stays Pending.
+
 ## Open gaps
 
 - M5 and GNews redistribution terms are unchecked, so generated data and snapshots are git-ignored. A clean clone needs the raw M5 files and a GNews key.
 
 - Docker is not installed on this machine. K1 needs it.
-- Environments were tested from the pinned files on this machine only, with a pip dry-run in fresh environments. The second-machine check in G0 is still to do.
+- Clean-clone install and rebuild passed on this machine in a separate folder, with byte-identical vendors and SKU manifest and 82 tests passing. It has not been tested on a second machine.

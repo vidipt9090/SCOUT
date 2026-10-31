@@ -45,3 +45,4 @@ Format: date | task | command | pass or fail | one line of output.
 2026-10-31 | B4 | make run-one SCENARIO=real_news | pass | 29 real articles, severity 5, escalated, 59.6 s
 2026-10-31 | B4 | make run-one ARCH=hierarchical | pass | 46.47 s and 77.01 s
 2026-10-31 | B4 | make test | pass | 82 passed
+2026-10-31 | K3 | fresh clone, make setup, make data, make test | pass | 82 passed, 1 skipped, vendors and skus identical

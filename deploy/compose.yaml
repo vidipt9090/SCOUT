@@ -1,0 +1,46 @@
+# Not yet tested: Docker was not available on the build machine. See docs/deviations.md.
+# Secrets come from the environment and are never baked in. Run `make data` first: generated data is mounted.
+services:
+  blackboard:
+    build: {context: .., dockerfile: deploy/Dockerfile, args: {SERVICE: scout_platform}}
+    command: python -m uvicorn sensing.blackboard_service.app:app --host 0.0.0.0 --port 8101
+    volumes: ["../runs:/app/runs"]
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request as u; u.urlopen('http://127.0.0.1:8101/health')"]
+      interval: 10s
+      retries: 6
+  mcp:
+    build: {context: .., dockerfile: deploy/Dockerfile, args: {SERVICE: scout_platform}}
+    command: >
+      python -c "from scout_platform.mcp_server.server import mcp;
+      mcp.settings.host='0.0.0.0'; mcp.settings.transport_security=None; mcp.run(transport='streamable-http')"
+    environment: {BLACKBOARD_URL: "http://blackboard:8101"}
+    volumes: ["../data:/app/data", "../runs:/app/runs"]
+    depends_on: {blackboard: {condition: service_healthy}}
+    healthcheck:
+      test: ["CMD", "python", "-c", "import socket; socket.create_connection(('127.0.0.1', 8102), 2)"]
+      interval: 10s
+      retries: 12
+  decision:
+    build: {context: .., dockerfile: deploy/Dockerfile, args: {SERVICE: decision}}
+    command: python -m uvicorn decision.service:app --host 0.0.0.0 --port 8103
+    environment:
+      MCP_URL: "http://mcp:8102/mcp"
+      GOOGLE_API_KEY: ${GOOGLE_API_KEY}
+    volumes: ["../runs:/app/runs"]
+    depends_on: {mcp: {condition: service_healthy}}
+    healthcheck:
+      test: ["CMD", "python", "-c", "import socket; socket.create_connection(('127.0.0.1', 8103), 2)"]
+      interval: 10s
+      retries: 12
+  sensing:
+    build: {context: .., dockerfile: deploy/Dockerfile, args: {SERVICE: sensing}}
+    profiles: [run]  # one-shot: docker compose run sensing python eval/run_one.py ...
+    environment:
+      MCP_URL: "http://mcp:8102/mcp"
+      DECISION_URL: "http://decision:8103"
+      GOOGLE_API_KEY: ${GOOGLE_API_KEY}
+      CREWAI_TRACING_ENABLED: "false"
+      OTEL_SDK_DISABLED: "true"
+    volumes: ["../data:/app/data", "../runs:/app/runs"]
+    depends_on: {decision: {condition: service_healthy}}
